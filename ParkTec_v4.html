@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>ParkTec · Prepa Tec EGL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet"/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --tec:#0039a6;--tec-dark:#002580;--tec-mid:#1a52c4;--tec-light:#eef3ff;--tec-xlight:#f5f8ff;
+  --accent:#ECF71B;--accent-dark:#b8c000;
+  --bg:#f2f5fb;--surface:#fff;--surface2:#f5f8ff;--surface3:#eef3ff;
+  --text:#0d1a2e;--text2:#4e6080;--text3:#9aaac4;
+  --green:#15803d;--green-bg:#f0fdf4;--green-border:#bbf7d0;
+  --red:#b91c1c;--red-bg:#fef2f2;--red-border:#fecaca;
+  --orange:#b45309;--orange-bg:#fffbeb;
+  --border:#dde5f2;--border2:#c8d4ec;
+  --r:12px;--r-sm:8px;--r-lg:18px;--r-xl:24px;
+  --sh:0 1px 8px rgba(0,57,166,.07);--sh-md:0 4px 20px rgba(0,57,166,.11);--sh-lg:0 8px 32px rgba(0,57,166,.15)
+}
+body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;overflow-x:hidden;font-size:14px;line-height:1.5}
+
+/* ===== SCREENS ===== */
+.screen{display:none;min-height:100vh;flex-direction:column}
+.screen.active{display:flex}
+
+/* ===== SHARED HEADER ===== */
+.app-header{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 1.1rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20;flex-shrink:0}
+.header-brand{display:flex;align-items:center;gap:.5rem}
+.header-logo{width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.header-wordmark{font-size:.95rem;font-weight:800;letter-spacing:-.5px;color:var(--text)}
+.header-wordmark span{color:var(--tec)}
+.header-right{display:flex;align-items:center;gap:.65rem}
+.avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--tec);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#fff;cursor:pointer;border:2px solid var(--tec-light);flex-shrink:0}
+.notif-btn{width:32px;height:32px;background:var(--surface2);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.notif-dot{width:7px;height:7px;background:#ef4444;border-radius:50%;position:absolute;top:5px;right:5px;border:1.5px solid #fff}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{background:var(--surface);border-top:1px solid var(--border);display:flex;padding:.55rem 0 .85rem;position:sticky;bottom:0;z-index:20;flex-shrink:0}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:.22rem;background:none;border:none;cursor:pointer;color:var(--text3);font-family:'Plus Jakarta Sans',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.15rem;transition:color .18s}
+.nav-btn.active{color:var(--tec)}
+.nav-btn.active .nav-pip{opacity:1}
+.nav-pip{width:4px;height:4px;background:var(--tec);border-radius:2px;opacity:0;margin-top:.1rem;transition:opacity .18s}
+.nav-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+
+/* ===== SCROLL AREA ===== */
+.scroll-area{flex:1;overflow-y:auto;padding:1.1rem}
+
+/* ===== COMMON ===== */
+.section-label{font-size:.68rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.7rem}
+.pill{display:inline-flex;align-items:center;gap:.3rem;padding:.22rem .6rem;border-radius:20px;font-size:.68rem;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+.pill-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.pill-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.pill-orange{background:var(--orange-bg);color:var(--orange)}
+.pill-blue{background:var(--tec-light);color:var(--tec);border:1px solid #bfcfee}
+.pill-gray{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.1rem;box-shadow:var(--sh)}
+.btn{display:flex;align-items:center;justify-content:center;gap:.4rem;width:100%;padding:.75rem;border:none;border-radius:var(--r-sm);font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;transition:all .18s;letter-spacing:.01em}
+.btn-tec{background:var(--tec);color:#fff}
+.btn-tec:hover{background:var(--tec-dark)}
+.btn-tec:active{transform:scale(.98)}
+.btn-outline{background:transparent;border:1.5px solid var(--border2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--tec);color:var(--tec)}
+.btn-danger{background:transparent;border:1.5px solid var(--red-border);color:var(--red)}
+.btn-danger:hover{background:var(--red-bg)}
+.btn-sm{padding:.38rem .8rem;font-size:.75rem;font-weight:700;border-radius:var(--r-sm);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;border:1.5px solid;transition:all .18s;display:inline-flex;align-items:center;gap:.3rem}
+.divider{height:1px;background:var(--border);margin:.9rem 0}
+
+/* ===== LOGIN ===== */
+#login{background:var(--tec);justify-content:flex-end}
+.login-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1.5rem 1.5rem;position:relative;overflow:hidden}
+.login-hero-art{position:absolute;inset:0;pointer-events:none}
+.login-brand{position:relative;z-index:1;text-align:center}
+.login-logo-wrap{width:80px;height:80px;background:rgba(255,255,255,.15);border-radius:22px;display:inline-flex;align-items:center;justify-content:center;border:1.5px solid rgba(255,255,255,.25);margin-bottom:.9rem}
+.login-wordmark{font-size:2rem;font-weight:800;color:#fff;letter-spacing:-1.5px;margin-bottom:.25rem}
+.login-wordmark span{color:var(--accent)}
+.login-tagline{font-size:.75rem;color:rgba(255,255,255,.6);letter-spacing:.05em;text-transform:uppercase}
+.login-sheet{background:var(--surface);border-radius:26px 26px 0 0;padding:1.75rem 1.5rem;box-shadow:0 -6px 32px rgba(0,0,0,.15)}
+.ls-title{font-size:1.1rem;font-weight:800;margin-bottom:.2rem}
+.ls-sub{font-size:.8rem;color:var(--text2);margin-bottom:1.4rem}
+.field-group{margin-bottom:.9rem}
+.field-label{font-size:.68rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:.35rem}
+.field-input{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:.68rem .9rem;color:var(--text);font-size:.88rem;font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border .18s,background .18s}
+.field-input:focus{border-color:var(--tec);background:#fff}
+.field-input::placeholder{color:var(--text3)}
+.err-msg{font-size:.72rem;color:var(--red);margin-top:.3rem;display:none}
+.login-foot{text-align:center;margin-top:.75rem;font-size:.72rem;color:var(--text3)}
+
+/* ===== HOME ===== */
+.hero-banner{background:var(--tec);border-radius:var(--r-lg);padding:1.2rem 1.3rem 1.2rem 1.4rem;margin-bottom:1.1rem;color:#fff;display:flex;align-items:center;justify-content:space-between;overflow:hidden;position:relative}
+.hb-text h3{font-size:.98rem;font-weight:700;margin-bottom:.2rem}
+.hb-text p{font-size:.75rem;color:rgba(255,255,255,.7);max-width:160px;line-height:1.4}
+.hb-art{flex-shrink:0}
+.hb-cta{margin-top:.75rem}
+.hb-cta-btn{display:inline-flex;align-items:center;gap:.35rem;background:var(--accent);color:#0d1a2e;font-size:.75rem;font-weight:800;padding:.42rem .9rem;border-radius:var(--r-sm);border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:.01em;transition:all .18s}
+.hb-cta-btn:hover{background:#d4df00;transform:translateY(-1px)}
+.zone-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.1rem}
+.zone-tile{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;cursor:pointer;transition:all .2s;box-shadow:var(--sh)}
+.zone-tile:hover{border-color:var(--tec);transform:translateY(-2px);box-shadow:var(--sh-md)}
+.zt-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.35rem}
+.zt-name{font-weight:700;font-size:.88rem}
+.zt-avail{font-size:.7rem;color:var(--text2);margin-bottom:.5rem}
+.bar-track{background:var(--surface2);border-radius:4px;height:5px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .5s}
+.bar-green{background:#22c55e}
+.bar-orange{background:#f59e0b}
+.bar-red{background:#ef4444}
+
+/* ===== MAP ===== */
+.zone-tabs{display:flex;gap:.45rem;overflow-x:auto;padding-bottom:.2rem;margin-bottom:.9rem}
+.ztab{background:var(--surface);border:1.5px solid var(--border);color:var(--text2);border-radius:var(--r-sm);padding:.32rem .85rem;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'Plus Jakarta Sans',sans-serif;transition:all .18s}
+.ztab.active{background:var(--tec);border-color:var(--tec);color:#fff}
+.zone-header-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;margin-bottom:.8rem;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh)}
+.zhc-name{font-weight:700;font-size:.9rem}
+.zhc-sub{font-size:.72rem;color:var(--text2);margin-top:.1rem}
+.legend-row{display:flex;gap:.85rem;flex-wrap:wrap;margin-bottom:.85rem}
+.leg{display:flex;align-items:center;gap:.28rem;font-size:.7rem;color:var(--text2);font-weight:600}
+.leg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.slots-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.45rem;margin-bottom:1rem}
+.slot{border-radius:9px;padding:.5rem .15rem;text-align:center;cursor:pointer;transition:transform .13s,box-shadow .13s;border:1.5px solid transparent;font-size:.65rem;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px}
+.slot .s-id{font-size:.6rem;color:inherit;opacity:.8}
+.slot.avail{background:#f0fdf4;border-color:#86efac;color:#166534}
+.slot.avail:hover{transform:scale(1.07);box-shadow:0 2px 10px rgba(22,163,74,.25)}
+.slot.occ{background:var(--red-bg);border-color:#fca5a5;color:#991b1b;cursor:not-allowed;opacity:.85}
+.slot.res{background:var(--tec-light);border-color:#93c5fd;color:var(--tec)}
+.slot.access{background:#faf5ff;border-color:#c4b5fd;color:#6d28d9}
+
+/* ===== CALENDAR ===== */
+.cal-month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
+.cal-month-title{font-weight:800;font-size:1rem;letter-spacing:-.3px}
+.cal-nav-btn{width:32px;height:32px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s}
+.cal-nav-btn:hover{border-color:var(--tec);color:var(--tec)}
+.cal-days-header{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:.35rem}
+.cal-day-label{text-align:center;font-size:.65rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;padding:.25rem 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.25rem;margin-bottom:1.2rem}
+.cal-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:var(--r-sm);font-size:.78rem;font-weight:500;cursor:pointer;transition:all .15s;color:var(--text);position:relative}
+.cal-cell:hover:not(.empty):not(.past){background:var(--tec-light);color:var(--tec)}
+.cal-cell.today{background:var(--tec);color:#fff;font-weight:700}
+.cal-cell.selected{background:var(--tec);color:#fff;font-weight:700}
+.cal-cell.has-res::after{content:'';width:4px;height:4px;background:var(--accent-dark);border-radius:50%;position:absolute;bottom:3px;left:50%;transform:translateX(-50%)}
+.cal-cell.past{color:var(--text3);cursor:default}
+.cal-cell.empty{cursor:default}
+.cal-cell.today.has-res::after,.cal-cell.selected.has-res::after{background:rgba(255,255,255,.7)}
+.res-for-date{margin-bottom:1.1rem}
+.rfd-label{font-size:.72rem;font-weight:700;color:var(--text2);margin-bottom:.5rem}
+.res-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.9rem;box-shadow:var(--sh)}
+.ri-badge{width:42px;height:42px;background:var(--tec);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.82rem;flex-shrink:0}
+.ri-info .ri-spot{font-weight:700;font-size:.9rem}
+.ri-info .ri-meta{font-size:.73rem;color:var(--text2);margin-top:.1rem}
+.ri-right{margin-left:auto;text-align:right}
+.ri-time{font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:.25rem}
+
+/* ===== PROFILE ===== */
+.profile-hero{background:var(--tec);border-radius:var(--r-lg);padding:1.5rem 1.3rem;margin-bottom:1rem;color:#fff;position:relative;overflow:hidden}
+.ph-art{position:absolute;right:-10px;top:-10px;opacity:.07}
+.ph-top{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;position:relative;z-index:1}
+.avatar-lg{width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;color:#fff;border:2.5px solid rgba(255,255,255,.4);flex-shrink:0}
+.ph-name{font-size:1.05rem;font-weight:700}
+.ph-mat{font-size:.78rem;opacity:.75;margin-top:.1rem}
+.ph-type{font-size:.7rem;background:rgba(255,255,255,.2);padding:.15rem .5rem;border-radius:20px;display:inline-block;margin-top:.35rem;font-weight:600}
+.ph-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;position:relative;z-index:1}
+.ph-stat{background:rgba(255,255,255,.12);border-radius:var(--r-sm);padding:.6rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.15)}
+.ph-stat .ps-val{font-size:1.05rem;font-weight:800}
+.ph-stat .ps-lbl{font-size:.6rem;opacity:.7;text-transform:uppercase;letter-spacing:.04em;margin-top:.1rem}
+.profile-section{margin-bottom:1rem}
+.profile-row{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--border)}
+.profile-row:last-child{border-bottom:none}
+.pr-left{display:flex;align-items:center;gap:.7rem}
+.pr-icon{width:34px;height:34px;background:var(--tec-light);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pr-label{font-size:.85rem;font-weight:600}
+.pr-sub{font-size:.72rem;color:var(--text2);margin-top:.05rem}
+.chevron{color:var(--text3)}
+
+/* ===== MODAL ===== */
+.modal-bg{position:fixed;inset:0;background:rgba(13,26,46,.55);display:flex;align-items:flex-end;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .22s;backdrop-filter:blur(3px)}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal-sheet{background:var(--surface);border-radius:22px 22px 0 0;padding:1.4rem 1.4rem 1.8rem;width:100%;max-width:480px;transform:translateY(100%);transition:transform .28s cubic-bezier(.25,.8,.25,1)}
+.modal-bg.open .modal-sheet{transform:translateY(0)}
+.drag-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 1.2rem}
+.modal-slot-hd{display:flex;align-items:center;gap:.85rem;margin-bottom:1.1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.modal-badge{width:48px;height:48px;background:var(--tec);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;color:#fff;flex-shrink:0}
+.modal-slot-name{font-weight:700;font-size:.98rem}
+.modal-slot-zone{font-size:.77rem;color:var(--text2);margin-top:.1rem}
+.time-pair{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:1rem}
+.time-block{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:.65rem .85rem}
+.tb-lbl{font-size:.63rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:.3rem}
+.tb-sel{background:transparent;border:none;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:.86rem;font-weight:700;outline:none;cursor:pointer;width:100%}
+.tb-sel option{background:var(--surface)}
+.reserve-info{background:var(--tec-xlight);border:1px solid #c0cfee;border-radius:var(--r-sm);padding:.7rem .9rem;margin-bottom:1rem;font-size:.78rem;color:var(--tec-dark);line-height:1.9}
+.reserve-info strong{font-weight:700;color:var(--tec)}
+
+/* ===== TOAST ===== */
+.toast-wrap{position:fixed;top:.9rem;left:50%;transform:translateX(-50%);z-index:300;pointer-events:none}
+.toast{background:var(--tec);color:#fff;padding:.55rem 1.1rem;border-radius:var(--r);font-size:.8rem;font-weight:700;opacity:0;transition:opacity .25s;white-space:nowrap;box-shadow:var(--sh-lg);font-family:'Plus Jakarta Sans',sans-serif;display:flex;align-items:center;gap:.4rem}
+.toast.show{opacity:1}
+
+/* ===== ONBOARDING ===== */
+.ob-overlay{position:fixed;inset:0;z-index:500;background:linear-gradient(160deg,#001f7a 0%,#0039a6 60%,#1a52c4 100%);display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:3rem 2rem 2.5rem}
+.ob-overlay.show{display:flex}
+.ob-slide{display:none;flex-direction:column;align-items:center;text-align:center;flex:1;justify-content:center}
+.ob-slide.active{display:flex}
+.ob-icon-wrap{width:110px;height:110px;background:rgba(255,255,255,.1);border-radius:28px;display:flex;align-items:center;justify-content:center;margin-bottom:1.8rem;border:1.5px solid rgba(255,255,255,.2)}
+.ob-title{font-size:1.45rem;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:.7rem}
+.ob-desc{font-size:.88rem;color:rgba(255,255,255,.7);line-height:1.65;max-width:280px}
+.ob-dots{display:flex;gap:.5rem;margin-bottom:1.5rem}
+.ob-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);transition:all .2s}
+.ob-dot.active{background:var(--accent);width:20px;border-radius:4px}
+.ob-footer{width:100%;display:flex;flex-direction:column;gap:.7rem;align-items:center}
+.ob-next-btn{width:100%;max-width:320px;padding:.82rem;background:var(--accent);color:#0d1a2e;font-size:.95rem;font-weight:800;border:none;border-radius:var(--r-sm);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:.01em;transition:all .18s}
+.ob-next-btn:hover{background:#d4df00;transform:translateY(-1px)}
+.ob-skip-btn{background:none;border:none;color:rgba(255,255,255,.5);font-size:.8rem;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;padding:.4rem .8rem}
+
+/* ===== CONFIRMATION OVERLAY ===== */
+.confirm-overlay{position:fixed;inset:0;z-index:450;background:rgba(0,37,128,.6);backdrop-filter:blur(6px);display:none;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:0}
+.confirm-overlay.show{display:flex}
+.confirm-sheet{background:var(--surface);border-radius:26px 26px 0 0;padding:2rem 1.6rem 2.5rem;width:100%;max-width:480px;animation:slideUp .32s cubic-bezier(.25,.8,.25,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.confirm-check{width:72px;height:72px;background:var(--green-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;border:2px solid var(--green-border)}
+.confirm-title{font-size:1.2rem;font-weight:800;text-align:center;margin-bottom:.3rem;color:var(--green)}
+.confirm-sub{font-size:.82rem;color:var(--text2);text-align:center;margin-bottom:1.5rem}
+.confirm-card{background:var(--tec-xlight);border:1.5px solid #c0cfee;border-radius:var(--r);padding:1rem 1.1rem;margin-bottom:1.5rem}
+.confirm-row{display:flex;justify-content:space-between;align-items:center;padding:.38rem 0;border-bottom:1px solid var(--border)}
+.confirm-row:last-child{border-bottom:none}
+.cr-label{font-size:.72rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
+.cr-value{font-size:.82rem;font-weight:700;color:var(--tec)}
+.qr-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:.8rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;margin-bottom:1.3rem}
+.qr-label{font-size:.65rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+
+/* ===== HELP TOOLTIP ===== */
+.help-bar{background:rgba(255,255,255,.12);border-radius:var(--r-sm);padding:.55rem .9rem;display:flex;align-items:center;gap:.55rem;font-size:.73rem;color:rgba(255,255,255,.8);font-weight:600;margin-top:.6rem;border:1px solid rgba(255,255,255,.18)}
+
+/* ===== DARK MODE ===== */
+body.dark{
+  --bg:#0d1117;--surface:#161b22;--surface2:#1c2230;--surface3:#1a2235;
+  --text:#e8edf5;--text2:#8899bb;--text3:#4a5878;
+  --border:#1e2d4a;--border2:#253a5e;
+  --tec-light:#0d1f40;--tec-xlight:#0a1628;
+  --green-bg:#0d2218;--green-border:#1a4d30;
+  --red-bg:#2d0d0d;--red-border:#5a1a1a;
+  --orange-bg:#2d1a00;
+  --sh:0 1px 8px rgba(0,0,0,.3);--sh-md:0 4px 20px rgba(0,0,0,.4);--sh-lg:0 8px 32px rgba(0,0,0,.5)
+}
+body.dark .field-input{background:var(--surface2)}
+body.dark .field-input:focus{background:#0d1528}
+body.dark .tb-sel option{background:#161b22}
+body.dark .login-sheet{background:#0d1117}
+body.dark .modal-sheet{background:#0d1117}
+body.dark .confirm-sheet{background:#0d1117}
+body.dark .ztab{background:var(--surface)}
+
+/* ===== SLIDE-IN PANEL (Settings, Notifications) ===== */
+.slide-panel{position:fixed;inset:0;z-index:400;display:flex;pointer-events:none}
+.slide-panel-backdrop{flex:1;background:rgba(13,26,46,.55);opacity:0;transition:opacity .28s;backdrop-filter:blur(3px);cursor:pointer}
+.slide-panel-content{width:min(100%,420px);background:var(--surface);height:100%;overflow-y:auto;transform:translateX(100%);transition:transform .3s cubic-bezier(.25,.8,.25,1);display:flex;flex-direction:column;margin-left:auto}
+.slide-panel.open{pointer-events:all}
+.slide-panel.open .slide-panel-backdrop{opacity:1}
+.slide-panel.open .slide-panel-content{transform:translateX(0)}
+.sp-header{padding:1rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--surface);position:sticky;top:0;z-index:10}
+.sp-title{font-size:1rem;font-weight:800;letter-spacing:-.3px}
+.sp-close{width:32px;height:32px;background:var(--surface2);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);transition:all .18s}
+.sp-close:hover{border-color:var(--tec);color:var(--tec)}
+.sp-body{padding:1rem 1.1rem;flex:1}
+
+/* Settings rows */
+.settings-group{margin-bottom:1.1rem}
+.settings-group-label{font-size:.67rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.6rem;padding:0 .1rem}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:.72rem .9rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:.4rem;transition:background .15s}
+.settings-row:hover{background:var(--surface2)}
+.srow-left{display:flex;align-items:center;gap:.65rem}
+.srow-icon{width:32px;height:32px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.srow-label{font-size:.85rem;font-weight:600}
+.srow-sub{font-size:.7rem;color:var(--text2);margin-top:.05rem}
+
+/* Toggle switch */
+.toggle{width:40px;height:22px;background:var(--border);border-radius:11px;position:relative;cursor:pointer;transition:background .22s;flex-shrink:0;border:none;padding:0}
+.toggle.on{background:var(--tec)}
+.toggle-knob{width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:left .22s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.toggle.on .toggle-knob{left:20px}
+
+/* Warning modal */
+.warn-modal{position:fixed;inset:0;z-index:600;display:none;align-items:center;justify-content:center;padding:1.5rem;background:rgba(13,26,46,.6);backdrop-filter:blur(4px)}
+.warn-modal.open{display:flex}
+.warn-sheet{background:var(--surface);border-radius:var(--r-lg);padding:1.5rem;width:100%;max-width:360px;animation:warnIn .22s ease}
+@keyframes warnIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.warn-icon{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .9rem}
+.warn-title{font-size:1rem;font-weight:800;text-align:center;margin-bottom:.35rem}
+.warn-body{font-size:.8rem;color:var(--text2);text-align:center;line-height:1.55;margin-bottom:1.2rem}
+.warn-actions{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.warn-input{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:.62rem .85rem;color:var(--text);font-size:.88rem;font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border .18s;margin-bottom:.9rem}
+.warn-input:focus{border-color:var(--tec)}
+
+/* Notification panel items */
+.notif-item{display:flex;gap:.8rem;padding:.85rem 0;border-bottom:1px solid var(--border)}
+.notif-item:last-child{border-bottom:none}
+.notif-badge{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.notif-content .notif-title{font-size:.83rem;font-weight:700;margin-bottom:.18rem}
+.notif-content .notif-desc{font-size:.74rem;color:var(--text2);line-height:1.45}
+.notif-content .notif-time{font-size:.67rem;color:var(--text3);margin-top:.25rem}
+.notif-unread-dot{width:8px;height:8px;background:var(--tec);border-radius:50%;flex-shrink:0;margin-top:.35rem}
+
+/* Reservation history in settings */
+.hist-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:.75rem .9rem;margin-bottom:.45rem}
+.hist-item .hi-spot{font-weight:800;font-size:.92rem;letter-spacing:-.3px;margin-bottom:.18rem}
+.hist-item .hi-meta{font-size:.72rem;color:var(--text2)}
+
+/* ===== SIGN UP / AUTH CHOICE ===== */
+#auth-choice{background:var(--tec);justify-content:flex-end}
+.auth-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1.5rem 1.5rem;position:relative;overflow:hidden}
+.auth-hero-art{position:absolute;inset:0;pointer-events:none}
+.auth-brand{position:relative;z-index:1;text-align:center}
+.auth-sheet{background:var(--surface);border-radius:26px 26px 0 0;padding:1.75rem 1.5rem 2rem;box-shadow:0 -6px 32px rgba(0,0,0,.15)}
+.auth-tab-row{display:flex;background:var(--surface2);border-radius:var(--r-sm);padding:3px;margin-bottom:1.3rem;border:1px solid var(--border)}
+.auth-tab{flex:1;text-align:center;padding:.52rem;border-radius:6px;font-size:.82rem;font-weight:700;cursor:pointer;color:var(--text3);font-family:'Plus Jakarta Sans',sans-serif;border:none;background:transparent;transition:all .2s}
+.auth-tab.active{background:var(--surface);color:var(--tec);box-shadow:var(--sh)}
+.signup-form{display:none}.signup-form.active{display:block}
+.login-form-inner{display:none}.login-form-inner.active{display:block}
+</style>
+<!-- ======================== ONBOARDING OVERLAY ======================== -->
+<div class="ob-overlay" id="onboarding">
+  <!-- Step 1 -->
+  <div class="ob-slide active" id="ob-0">
+    <div class="ob-icon-wrap">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <!-- Yellow star -->
+        <polygon points="32,6 36.5,20 51,20 39.5,28.5 43.5,43 32,34.5 20.5,43 24.5,28.5 13,20 27.5,20" fill="#ECF71B"/>
+        <!-- Car body -->
+        <rect x="14" y="32" width="36" height="18" rx="6" fill="#0039a6"/>
+        <!-- Car roof -->
+        <path d="M20,32 L25,23 L39,23 L44,32 Z" fill="#1a52c4"/>
+        <!-- Windows -->
+        <rect x="23" y="24" width="8" height="7" rx="2" fill="rgba(200,220,255,0.88)"/>
+        <rect x="33" y="24" width="8" height="7" rx="2" fill="rgba(200,220,255,0.88)"/>
+        <!-- Eyes -->
+        <circle cx="24" cy="39" r="2.5" fill="white"/>
+        <circle cx="40" cy="39" r="2.5" fill="white"/>
+        <!-- Smile -->
+        <path d="M22,45 Q32,50 42,45" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Wheels -->
+        <circle cx="22" cy="51" r="5" fill="#002580"/>
+        <circle cx="42" cy="51" r="5" fill="#002580"/>
+        <circle cx="22" cy="51" r="2.5" fill="rgba(220,230,255,0.6)"/>
+        <circle cx="42" cy="51" r="2.5" fill="rgba(220,230,255,0.6)"/>
+      </svg>
+    </div>
+    <div class="ob-title">Welcome to ParkTec</div>
+    <div class="ob-desc">Your smart campus parking solution for Prepa Tec EGL. Reserve your spot before you even leave home.</div>
+  </div>
+  <!-- Step 2 -->
+  <div class="ob-slide" id="ob-1">
+    <div class="ob-icon-wrap">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <rect x="8" y="14" width="48" height="38" rx="8" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.4)" stroke-width="2"/>
+        <rect x="15" y="22" width="10" height="8" rx="2.5" fill="#22c55e" opacity=".9"/>
+        <rect x="28" y="22" width="10" height="8" rx="2.5" fill="#ef4444" opacity=".8"/>
+        <rect x="41" y="22" width="10" height="8" rx="2.5" fill="#22c55e" opacity=".9"/>
+        <rect x="15" y="34" width="10" height="8" rx="2.5" fill="#ef4444" opacity=".8"/>
+        <rect x="28" y="34" width="10" height="8" rx="2.5" fill="#22c55e" opacity=".9"/>
+        <rect x="41" y="34" width="10" height="8" rx="2.5" fill="#22c55e" opacity=".9"/>
+        <circle cx="51" cy="13" r="9" fill="#ECF71B"/>
+        <path d="M47 13l2.5 2.5 5-5" stroke="#0d1a2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="ob-title">Check Live Availability</div>
+    <div class="ob-desc">See real-time parking slot availability across all zones. Green means open — tap to reserve instantly.</div>
+  </div>
+  <!-- Step 3 -->
+  <div class="ob-slide" id="ob-2">
+    <div class="ob-icon-wrap">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <rect x="10" y="10" width="44" height="44" rx="10" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.35)" stroke-width="2"/>
+        <path d="M20 32l10 10 14-20" stroke="#ECF71B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="ob-title">Reserve in 2 Taps</div>
+    <div class="ob-desc">Pick your time, confirm your spot, and get a digital QR pass. Parking has never been this easy on campus.</div>
+  </div>
+
+  <div class="ob-dots">
+    <div class="ob-dot active" id="d0"></div>
+    <div class="ob-dot" id="d1"></div>
+    <div class="ob-dot" id="d2"></div>
+  </div>
+  <div class="ob-footer">
+    <button class="ob-next-btn" id="ob-next-btn" onclick="obNext()">Get Started</button>
+    <button class="ob-skip-btn" onclick="obSkip()">Skip intro</button>
+  </div>
+</div>
+
+<!-- ======================== CONFIRMATION OVERLAY ======================== -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-sheet">
+    <div class="confirm-check">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><path d="M8 18l7 7 13-14" stroke="#15803d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="confirm-title">Spot Reserved!</div>
+    <div class="confirm-sub">Your parking reservation is confirmed. Show this pass at the entrance gate.</div>
+    <div class="confirm-card">
+      <div class="confirm-row"><span class="cr-label">Space</span><span class="cr-value" id="cf-slot">—</span></div>
+      <div class="confirm-row"><span class="cr-label">Zone</span><span class="cr-value" id="cf-zone">—</span></div>
+      <div class="confirm-row"><span class="cr-label">Check-in</span><span class="cr-value" id="cf-in">—</span></div>
+      <div class="confirm-row"><span class="cr-label">Check-out</span><span class="cr-value" id="cf-out">—</span></div>
+      <div class="confirm-row"><span class="cr-label">Student</span><span class="cr-value" id="cf-mat">—</span></div>
+    </div>
+    <div class="qr-wrap">
+      <div class="qr-label">Parking Pass QR Code</div>
+      <svg width="90" height="90" viewBox="0 0 90 90" fill="none">
+        <!-- Simulated QR pattern -->
+        <rect width="90" height="90" fill="white"/>
+        <rect x="5" y="5" width="30" height="30" rx="4" fill="#0039a6"/>
+        <rect x="10" y="10" width="20" height="20" rx="2" fill="white"/>
+        <rect x="14" y="14" width="12" height="12" rx="1" fill="#0039a6"/>
+        <rect x="55" y="5" width="30" height="30" rx="4" fill="#0039a6"/>
+        <rect x="60" y="10" width="20" height="20" rx="2" fill="white"/>
+        <rect x="64" y="14" width="12" height="12" rx="1" fill="#0039a6"/>
+        <rect x="5" y="55" width="30" height="30" rx="4" fill="#0039a6"/>
+        <rect x="10" y="60" width="20" height="20" rx="2" fill="white"/>
+        <rect x="14" y="64" width="12" height="12" rx="1" fill="#0039a6"/>
+        <rect x="42" y="5" width="5" height="5" fill="#0039a6"/><rect x="49" y="5" width="5" height="5" fill="#0039a6"/>
+        <rect x="42" y="12" width="5" height="5" fill="#0039a6"/><rect x="49" y="19" width="5" height="5" fill="#0039a6"/>
+        <rect x="5" y="42" width="5" height="5" fill="#0039a6"/><rect x="12" y="42" width="5" height="5" fill="#0039a6"/>
+        <rect x="5" y="49" width="5" height="5" fill="#0039a6"/><rect x="19" y="49" width="5" height="5" fill="#0039a6"/>
+        <rect x="42" y="42" width="5" height="5" fill="#0039a6"/><rect x="49" y="42" width="5" height="5" fill="#0039a6"/>
+        <rect x="56" y="42" width="5" height="5" fill="#0039a6"/><rect x="63" y="42" width="5" height="5" fill="#0039a6"/>
+        <rect x="70" y="42" width="5" height="5" fill="#0039a6"/><rect x="77" y="42" width="5" height="5" fill="#0039a6"/>
+        <rect x="42" y="49" width="5" height="5" fill="#0039a6"/><rect x="56" y="49" width="5" height="5" fill="#0039a6"/>
+        <rect x="70" y="49" width="5" height="5" fill="#0039a6"/><rect x="42" y="56" width="5" height="5" fill="#0039a6"/>
+        <rect x="49" y="56" width="5" height="5" fill="#0039a6"/><rect x="63" y="56" width="5" height="5" fill="#0039a6"/>
+        <rect x="77" y="56" width="5" height="5" fill="#0039a6"/><rect x="42" y="63" width="5" height="5" fill="#0039a6"/>
+        <rect x="56" y="63" width="5" height="5" fill="#0039a6"/><rect x="70" y="63" width="5" height="5" fill="#0039a6"/>
+        <rect x="42" y="70" width="5" height="5" fill="#0039a6"/><rect x="49" y="70" width="5" height="5" fill="#0039a6"/>
+        <rect x="63" y="70" width="5" height="5" fill="#0039a6"/><rect x="77" y="70" width="5" height="5" fill="#0039a6"/>
+        <rect x="42" y="77" width="5" height="5" fill="#0039a6"/><rect x="56" y="77" width="5" height="5" fill="#0039a6"/>
+        <rect x="70" y="77" width="5" height="5" fill="#0039a6"/>
+      </svg>
+    </div>
+    <button class="btn btn-tec" onclick="closeConfirm()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Home
+    </button>
+  </div>
+</div>
+
+
+<!-- ======================== AUTH CHOICE (Welcome) ======================== -->
+<div id="auth-choice" class="screen active">
+  <div class="auth-hero">
+    <svg class="auth-hero-art" viewBox="0 0 400 340" fill="none" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+      <circle cx="340" cy="60" r="140" fill="white" opacity=".06"/>
+      <circle cx="60" cy="300" r="100" fill="white" opacity=".05"/>
+    </svg>
+    <div class="auth-brand">
+      <div class="login-logo-wrap">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+          <polygon points="26,4 29.5,15 41,15 32,21.5 35,33 26,26.5 17,33 20,21.5 11,15 22.5,15" fill="#ECF71B"/>
+          <path d="M15,28 L19,20 L33,20 L37,28 Z" fill="#1a52c4"/>
+          <rect x="12" y="27" width="28" height="14" rx="5" fill="#0039a6"/>
+          <rect x="18" y="21" width="7" height="6" rx="1.5" fill="rgba(200,225,255,0.9)"/>
+          <rect x="27" y="21" width="7" height="6" rx="1.5" fill="rgba(200,225,255,0.9)"/>
+          <circle cx="19.5" cy="33" r="2.2" fill="white"/>
+          <circle cx="32.5" cy="33" r="2.2" fill="white"/>
+          <path d="M17.5,38 Q26,43 34.5,38" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <circle cx="19" cy="42" r="4.5" fill="#001f7a"/>
+          <circle cx="33" cy="42" r="4.5" fill="#001f7a"/>
+          <circle cx="19" cy="42" r="2" fill="rgba(220,230,255,0.6)"/>
+          <circle cx="33" cy="42" r="2" fill="rgba(220,230,255,0.6)"/>
+        </svg>
+      </div>
+      <div class="login-wordmark">Park<span>Tec</span></div>
+      <div class="login-tagline">Prepa Tec EGL · Campus Parking System</div>
+      <div style="margin-top:1.5rem;display:flex;flex-direction:column;gap:.65rem;width:100%;max-width:260px">
+        <button class="btn btn-tec" style="background:var(--accent);color:#0d1a2e" onclick="showAuthSheet('signup')">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2.5" stroke="#0d1a2e" stroke-width="1.5"/><path d="M2.5 12c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5" stroke="#0d1a2e" stroke-width="1.5" stroke-linecap="round"/><path d="M11 3v4M13 5h-4" stroke="#0d1a2e" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Create Account
+        </button>
+        <button class="btn btn-outline" style="border-color:rgba(255,255,255,.35);color:#fff;background:rgba(255,255,255,.1)" onclick="showAuthSheet('login')">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Sign In
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== AUTH SHEET (Sign Up / Login) ======================== -->
+<div id="auth-sheet-overlay" style="position:fixed;inset:0;z-index:350;display:none;flex-direction:column;justify-content:flex-end;background:rgba(0,37,128,.55);backdrop-filter:blur(4px)" onclick="hideAuthSheet(event)">
+  <div id="auth-sheet" style="background:var(--surface);border-radius:26px 26px 0 0;padding:1.6rem 1.5rem 2rem;max-width:480px;width:100%;margin:0 auto;animation:slideUp .3s cubic-bezier(.25,.8,.25,1)" onclick="event.stopPropagation()">
+    <div class="drag-handle"></div>
+    <div class="auth-tab-row">
+      <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Create Account</button>
+      <button class="auth-tab" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
+    </div>
+
+    <!-- SIGN UP FORM -->
+    <div class="signup-form" id="signup-form">
+      <div class="field-group">
+        <label class="field-label">Full Name</label>
+        <input class="field-input" id="su-name" type="text" placeholder="Your full name"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Student / Faculty ID</label>
+        <input class="field-input" id="su-uid" type="text" placeholder="A01XXXXXXX" maxlength="10"/>
+        <div class="err-msg" id="su-uid-err">Enter a valid ID (e.g. A01234567)</div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Email</label>
+        <input class="field-input" id="su-email" type="email" placeholder="a01234567@tec.mx"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Password</label>
+        <input class="field-input" id="su-pw" type="password" placeholder="Min 8 characters"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Confirm Password</label>
+        <input class="field-input" id="su-pw2" type="password" placeholder="Repeat password"/>
+        <div class="err-msg" id="su-pw-err">Passwords do not match</div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Vehicle Plate (optional)</label>
+        <input class="field-input" id="su-plate" type="text" placeholder="ABC-123"/>
+      </div>
+      <button class="btn btn-tec" onclick="doSignUp()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3 6-6" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Create My Account
+      </button>
+    </div>
+
+    <!-- SIGN IN FORM -->
+    <div class="login-form-inner" id="login-form-inner">
+      <div class="field-group">
+        <label class="field-label">Student / Faculty ID</label>
+        <input class="field-input" id="uid" type="text" placeholder="A01XXXXXXX" maxlength="10"/>
+        <div class="err-msg" id="uid-err">Enter a valid ID (e.g. A01234567 or A02345678)</div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Password</label>
+        <input class="field-input" id="upw" type="password" placeholder="Your Tec password"/>
+      </div>
+      <button class="btn btn-tec" onclick="doLogin()" style="margin-bottom:.6rem">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M9 4l3 3.5-3 3.5" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Sign in to ParkTec
+      </button>
+      <div class="login-foot">Tec de Monterrey · Prepa EGL · Secure Campus Access</div>
+    </div>
+  </div>
+</div>
+<!-- ======================== MAIN APP ======================== -->
+<div id="app" class="screen">
+
+  <!-- SHARED HEADER -->
+  <div class="app-header">
+    <div class="header-brand">
+      <div class="header-logo">
+        <!-- Happy blue car + yellow star (small header version) -->
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <polygon points="16,2 18.5,9.5 26.5,9.5 20.5,13.5 22.5,21 16,17 9.5,21 11.5,13.5 5.5,9.5 13.5,9.5" fill="#ECF71B"/>
+          <path d="M9,17 L12,12 L20,12 L23,17 Z" fill="#1a52c4"/>
+          <rect x="7" y="16" width="18" height="9" rx="3.5" fill="#0039a6"/>
+          <rect x="11" y="12.5" width="4" height="3.5" rx="1" fill="rgba(200,225,255,0.9)"/>
+          <rect x="17" y="12.5" width="4" height="3.5" rx="1" fill="rgba(200,225,255,0.9)"/>
+          <circle cx="12" cy="21" r="1.5" fill="white"/>
+          <circle cx="20" cy="21" r="1.5" fill="white"/>
+          <path d="M11,24 Q16,26.5 21,24" stroke="white" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          <circle cx="11" cy="26" r="3" fill="#001f7a"/>
+          <circle cx="21" cy="26" r="3" fill="#001f7a"/>
+          <circle cx="11" cy="26" r="1.2" fill="rgba(200,220,255,0.5)"/>
+          <circle cx="21" cy="26" r="1.2" fill="rgba(200,220,255,0.5)"/>
+        </svg>
+      </div>
+      <span class="header-wordmark">Park<span>Tec</span></span>
+    </div>
+    <div class="header-right">
+      <div class="notif-btn" onclick="openNotifications()">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.5A4 4 0 003.5 5.5v3l-1 1.5h10l-1-1.5v-3A4 4 0 007.5 1.5z" stroke="currentColor" stroke-width="1.4"/><path d="M6 11a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.4"/></svg>
+        <div class="notif-dot"></div>
+      </div>
+      <div class="avatar-sm" id="hdr-avatar" onclick="switchPane('profile',document.querySelectorAll('.nav-btn')[3])">--</div>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div id="pane-home" class="scroll-area tab-pane active">
+    <div class="hero-banner">
+      <div class="hb-text">
+        <div style="font-size:.72rem;color:rgba(255,255,255,.65);margin-bottom:.2rem">Good morning,</div>
+        <h3 id="home-name">Student</h3>
+        <p>Reserve your spot before you arrive on campus</p>
+        <div class="hb-cta">
+          <button class="hb-cta-btn" onclick="switchPane('map',document.querySelectorAll('.nav-btn')[1])">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1.5" y="3" width="10" height="8" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M4 3v7M9 3v7M1.5 6.5h10" stroke="currentColor" stroke-width="1.1"/></svg>
+            Find a Spot Now
+          </button>
+        </div>
+      </div>
+      <div class="hb-art">
+        <svg width="90" height="78" viewBox="0 0 90 78" fill="none" opacity=".22">
+          <rect x="5" y="18" width="80" height="52" rx="8" fill="white"/>
+          <rect x="13" y="26" width="18" height="13" rx="3" fill="white"/>
+          <rect x="37" y="26" width="18" height="13" rx="3" fill="white"/>
+          <rect x="61" y="26" width="18" height="13" rx="3" fill="white"/>
+          <rect x="13" y="45" width="18" height="13" rx="3" fill="white"/>
+          <rect x="37" y="45" width="18" height="13" rx="3" fill="white"/>
+          <rect x="61" y="45" width="18" height="13" rx="3" fill="white"/>
+          <rect x="0" y="13" width="90" height="5" rx="2.5" fill="white"/>
+        </svg>
+      </div>
+    </div>
+    <div class="section-label">Parking Zones</div>
+    <div class="zone-grid" id="home-zones"></div>
+    <div class="section-label">Today's Reservation</div>
+    <div id="home-next"></div>
+  </div>
+
+  <!-- MAP -->
+  <div id="pane-map" class="scroll-area tab-pane" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem">
+      <div style="font-size:1.1rem;font-weight:800;letter-spacing:-.4px">Parking Map</div>
+      <span class="pill pill-blue" style="font-size:.65rem">Live</span>
+    </div>
+    <div style="font-size:.78rem;color:var(--text2);margin-bottom:.9rem">Tap any <span style="color:var(--green);font-weight:700">green</span> slot to reserve it instantly.</div>
+    <div class="zone-tabs" id="zone-tabs"></div>
+    <div class="zone-header-card">
+      <div>
+        <div class="zhc-name" id="zh-name">Zone A – Main Campus</div>
+        <div class="zhc-sub" id="zh-sub">8 spaces available</div>
+      </div>
+      <span class="pill pill-green" id="zh-pill">8 free</span>
+    </div>
+    <div class="legend-row">
+      <div class="leg"><div class="leg-dot" style="background:#22c55e;border:1px solid #86efac"></div>Available</div>
+      <div class="leg"><div class="leg-dot" style="background:#ef4444;border:1px solid #fca5a5"></div>Occupied</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--tec);border:1px solid #93c5fd"></div>My Reservation</div>
+      <div class="leg"><div class="leg-dot" style="background:#7c3aed;border:1px solid #c4b5fd"></div>Accessible</div>
+    </div>
+    <div class="slots-grid" id="slots-grid"></div>
+  </div>
+
+  <!-- SCHEDULE / RESERVATIONS -->
+  <div id="pane-cal" class="scroll-area tab-pane" style="display:none">
+    <div style="font-size:1.1rem;font-weight:800;letter-spacing:-.4px;margin-bottom:1rem">Schedule</div>
+    <div class="card" style="margin-bottom:1rem">
+      <div class="cal-month-nav">
+        <button class="cal-nav-btn" onclick="changeMonth(-1)">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M8 10L4 6.5 8 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="cal-month-title" id="cal-month-title">April 2026</div>
+        <button class="cal-nav-btn" onclick="changeMonth(1)">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M5 3l4 3.5L5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="cal-days-header" id="cal-days-hd"></div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+    <div id="cal-res-section"></div>
+    <div class="section-label">All Reservations</div>
+    <div id="all-res-list"></div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="pane-profile" class="scroll-area tab-pane" style="display:none">
+    <div class="profile-hero">
+      <svg class="ph-art" width="160" height="160" viewBox="0 0 160 160" fill="none">
+        <circle cx="80" cy="80" r="75" fill="white"/>
+        <circle cx="80" cy="80" r="50" fill="white"/>
+      </svg>
+      <div class="ph-top">
+        <div class="avatar-lg" id="prof-avatar">--</div>
+        <div>
+          <div class="ph-name" id="prof-name">Student</div>
+          <div class="ph-mat" id="prof-mat">A01234567</div>
+          <div class="ph-type">Student · Prepa Tec EGL</div>
+        </div>
+      </div>
+      <div class="ph-stats">
+        <div class="ph-stat"><div class="ps-val" id="stat-res">1</div><div class="ps-lbl">Reservations</div></div>
+        <div class="ph-stat"><div class="ps-val">A,B,C</div><div class="ps-lbl">Zones</div></div>
+        <div class="ph-stat"><div class="ps-val">Active</div><div class="ps-lbl">Permit</div></div>
+      </div>
+    </div>
+
+    <div class="section-label">Vehicle & Permit</div>
+    <div class="card" style="margin-bottom:1rem">
+      <div class="profile-row">
+        <div class="pr-left">
+          <div class="pr-icon">
+            <svg width="16" height="14" viewBox="0 0 16 14" fill="none"><rect x="1" y="4" width="14" height="7" rx="3" fill="none" stroke="var(--tec)" stroke-width="1.5"/><path d="M4 4 L6 1.5 L10 1.5 L12 4" stroke="var(--tec)" stroke-width="1.4"/><circle cx="4.5" cy="11" r="1.5" fill="var(--tec)"/><circle cx="11.5" cy="11" r="1.5" fill="var(--tec)"/></svg>
+          </div>
+          <div><div class="pr-label">Vehicle Plate</div><div class="pr-sub">ABC-123</div></div>
+        </div>
+        <span class="chevron"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+      <div class="profile-row">
+        <div class="pr-left">
+          <div class="pr-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="11" rx="3" stroke="var(--tec)" stroke-width="1.5"/><path d="M5 1v4M11 1v4M1 8h14" stroke="var(--tec)" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <div><div class="pr-label">Permit Expiry</div><div class="pr-sub">June 30, 2026</div></div>
+        </div>
+        <span class="pill pill-green">Active</span>
+      </div>
+    </div>
+
+    <div class="section-label">Campus Access</div>
+    <div class="card" style="margin-bottom:1rem">
+      <div class="profile-row">
+        <div class="pr-left">
+          <div class="pr-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="3" stroke="var(--tec)" stroke-width="1.5"/><path d="M5 8h6M5 5.5h4M5 10.5h3" stroke="var(--tec)" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+          <div><div class="pr-label">Main Parking</div><div class="pr-sub">Zones A, B, C</div></div>
+        </div>
+        <span class="pill pill-green">Granted</span>
+      </div>
+      <div class="profile-row">
+        <div class="pr-left">
+          <div class="pr-icon" style="background:var(--red-bg)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="3" stroke="var(--red)" stroke-width="1.5"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5" stroke="var(--red)" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+          <div><div class="pr-label">Faculty Parking</div><div class="pr-sub">Zone D – Restricted</div></div>
+        </div>
+        <span class="pill pill-red">Denied</span>
+      </div>
+    </div>
+
+    <div class="section-label">Account</div>
+    <div class="card">
+      <div class="profile-row" style="cursor:pointer" onclick="openSettings()">
+        <div class="pr-left">
+          <div class="pr-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="var(--tec)" stroke-width="1.4"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.6 3.6l1.4 1.4M11 11l1.4 1.4M11 3.6l-1.4 1.4M4.9 11l-1.3 1.4" stroke="var(--tec)" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+          <div class="pr-label">Settings</div>
+        </div>
+        <span class="chevron"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+      <div class="profile-row" style="cursor:pointer" onclick="signOut()">
+        <div class="pr-left">
+          <div class="pr-icon" style="background:var(--red-bg)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M10 11l3-3-3-3M13 8H6" stroke="var(--red)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="pr-label" style="color:var(--red)">Sign out</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <button class="nav-btn active" onclick="switchPane('home',this)">
+      <div class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 9L10 2l8 7v9a1 1 0 01-1 1h-4v-5H7v5H3a1 1 0 01-1-1V9z" stroke="currentColor" stroke-width="1.7" fill="none"/></svg>
+      </div>
+      Home
+      <div class="nav-pip"></div>
+    </button>
+    <button class="nav-btn" onclick="switchPane('map',this)">
+      <div class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="13" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M7 4v13M13 4v13M2 10h16" stroke="currentColor" stroke-width="1.4"/></svg>
+      </div>
+      Map
+      <div class="nav-pip"></div>
+    </button>
+    <button class="nav-btn" onclick="switchPane('cal',this)">
+      <div class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="14" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M6 2v4M14 2v4M2 10h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="14" r="1" fill="currentColor"/><circle cx="10.5" cy="14" r="1" fill="currentColor"/><circle cx="14" cy="14" r="1" fill="currentColor"/></svg>
+      </div>
+      Schedule
+      <div class="nav-pip"></div>
+    </button>
+    <button class="nav-btn" onclick="switchPane('profile',this)">
+      <div class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.7"/><path d="M3 18c0-3.87 3.13-7 7-7s7 3.13 7 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </div>
+      Profile
+      <div class="nav-pip"></div>
+    </button>
+  </div>
+</div>
+
+<!-- ======================== NOTIFICATIONS PANEL ======================== -->
+<div class="slide-panel" id="notif-panel">
+  <div class="slide-panel-backdrop" onclick="closePanel('notif-panel')"></div>
+  <div class="slide-panel-content">
+    <div class="sp-header">
+      <span class="sp-title">Notifications</span>
+      <div style="display:flex;align-items:center;gap:.6rem">
+        <span style="font-size:.72rem;color:var(--tec);cursor:pointer;font-weight:700" onclick="markAllRead()">Mark all read</span>
+        <div class="sp-close" onclick="closePanel('notif-panel')">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 2l9 9M11 2L2 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="sp-body">
+      <div id="notif-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== SETTINGS PANEL ======================== -->
+<div class="slide-panel" id="settings-panel">
+  <div class="slide-panel-backdrop" onclick="closePanel('settings-panel')"></div>
+  <div class="slide-panel-content">
+    <div class="sp-header">
+      <span class="sp-title">Settings</span>
+      <div class="sp-close" onclick="closePanel('settings-panel')">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 2l9 9M11 2L2 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+    <div class="sp-body">
+
+      <!-- Appearance -->
+      <div class="settings-group">
+        <div class="settings-group-label">Appearance</div>
+        <div class="settings-row">
+          <div class="srow-left">
+            <div class="srow-icon" style="background:var(--surface2);border:1px solid var(--border)">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="var(--text2)"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.1 3.1l1.1 1.1M11.8 11.8l1.1 1.1M11.8 3.1l-1.1 1.1M4.2 11.8l-1.1 1.1" stroke="var(--text2)" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <div class="srow-label">Dark Mode</div>
+              <div class="srow-sub">Switch to dark theme</div>
+            </div>
+          </div>
+          <button class="toggle" id="dark-toggle" onclick="toggleDark()"><div class="toggle-knob"></div></button>
+        </div>
+      </div>
+
+      <!-- Account -->
+      <div class="settings-group">
+        <div class="settings-group-label">Account</div>
+        <div class="settings-row" style="cursor:pointer" onclick="openWarn('name')">
+          <div class="srow-left">
+            <div class="srow-icon" style="background:var(--tec-light)">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5.5" r="2.5" stroke="var(--tec)" stroke-width="1.4"/><path d="M3 14c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="var(--tec)" stroke-width="1.4" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <div class="srow-label">Display Name</div>
+              <div class="srow-sub" id="settings-name-preview">Your name</div>
+            </div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="var(--text3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="settings-row" style="cursor:pointer" onclick="openWarn('photo')">
+          <div class="srow-left">
+            <div class="srow-icon" style="background:var(--tec-light)">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="2.5" stroke="var(--tec)" stroke-width="1.4"/><circle cx="8" cy="8" r="2.5" stroke="var(--tec)" stroke-width="1.3"/><circle cx="12.5" cy="5" r="1" fill="var(--tec)"/></svg>
+            </div>
+            <div>
+              <div class="srow-label">Profile Photo</div>
+              <div class="srow-sub">Change your avatar</div>
+            </div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="var(--text3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="settings-row" style="cursor:pointer" onclick="openWarn('password')">
+          <div class="srow-left">
+            <div class="srow-icon" style="background:var(--tec-light)">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="7" rx="2" stroke="var(--tec)" stroke-width="1.4"/><path d="M5 7V5a3 3 0 016 0v2" stroke="var(--tec)" stroke-width="1.4"/><circle cx="8" cy="10.5" r="1" fill="var(--tec)"/></svg>
+            </div>
+            <div>
+              <div class="srow-label">Change Password</div>
+              <div class="srow-sub">Update your password</div>
+            </div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="var(--text3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="settings-row" style="cursor:pointer" onclick="openWarn('email')">
+          <div class="srow-left">
+            <div class="srow-icon" style="background:var(--tec-light)">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3.5" width="14" height="9" rx="2" stroke="var(--tec)" stroke-width="1.4"/><path d="M1 6l7 4 7-4" stroke="var(--tec)" stroke-width="1.3"/></svg>
+            </div>
+            <div>
+              <div class="srow-label">Email Address</div>
+              <div class="srow-sub" id="settings-email-preview">a01234567@tec.mx</div>
+            </div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="var(--text3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <!-- Notifications Settings -->
+      <div class="settings-group">
+        <div class="settings-group-label">Notifications</div>
+        <div class="settings-row">
+          <div class="srow-left">
+            <div class="srow-icon" style="background:var(--tec-light)">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5A4 4 0 004 5.5v3l-1 1.5h10l-1-1.5v-3A4 4 0 008 1.5z" stroke="var(--tec)" stroke-width="1.4"/><path d="M6.5 11.5a1.5 1.5 0 003 0" stroke="var(--tec)" stroke-width="1.4"/></svg>
+            </div>
+            <div>
+              <div class="srow-label">Push Notifications</div>
+              <div class="srow-sub">Reservation reminders</div>
+            </div>
+          </div>
+          <button class="toggle on" id="notif-toggle" onclick="this.classList.toggle('on');document.querySelector('#notif-toggle .toggle-knob').style.left=this.classList.contains('on')?'20px':'2px'"><div class="toggle-knob" style="left:20px"></div></button>
+        </div>
+        <div class="settings-row">
+          <div class="srow-left">
+            <div class="srow-icon" style="background:var(--orange-bg)">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 5.5H15l-4.5 3.3 1.7 5.2L8 11.8l-4.2 3.2 1.7-5.2L1 6.5h5.2L8 1z" stroke="var(--orange)" stroke-width="1.3" fill="none"/></svg>
+            </div>
+            <div>
+              <div class="srow-label">Availability Alerts</div>
+              <div class="srow-sub">When spots open nearby</div>
+            </div>
+          </div>
+          <button class="toggle on" id="avail-toggle" onclick="this.classList.toggle('on')"><div class="toggle-knob" style="left:20px"></div></button>
+        </div>
+      </div>
+
+      <!-- Vehicle -->
+      <div class="settings-group">
+        <div class="settings-group-label">Vehicle</div>
+        <div class="settings-row" style="cursor:pointer" onclick="openWarn('plate')">
+          <div class="srow-left">
+            <div class="srow-icon" style="background:var(--surface2);border:1px solid var(--border)">
+              <svg width="16" height="14" viewBox="0 0 16 14" fill="none"><rect x="1" y="3" width="14" height="8" rx="3" stroke="var(--text2)" stroke-width="1.4"/><path d="M3.5 3L5 1.5H11L12.5 3" stroke="var(--text2)" stroke-width="1.3"/><circle cx="4" cy="11" r="1.5" fill="var(--text2)"/><circle cx="12" cy="11" r="1.5" fill="var(--text2)"/></svg>
+            </div>
+            <div>
+              <div class="srow-label">Vehicle Plate</div>
+              <div class="srow-sub" id="settings-plate-preview">ABC-123</div>
+            </div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="var(--text3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <!-- Reservation History -->
+      <div class="settings-group">
+        <div class="settings-group-label">Reservation History</div>
+        <div id="settings-history"></div>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="settings-group">
+        <div class="settings-group-label">Account Actions</div>
+        <div class="settings-row" style="cursor:pointer;border-color:var(--red-border)" onclick="openWarn('delete')">
+          <div class="srow-left">
+            <div class="srow-icon" style="background:var(--red-bg)">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5h10M6 5V3.5h4V5M5.5 5l.5 7.5h4L11 5" stroke="var(--red)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div class="srow-label" style="color:var(--red)">Delete Account</div>
+              <div class="srow-sub">Permanently remove all data</div>
+            </div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="var(--red)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ======================== WARNING MODALS ======================== -->
+<div class="warn-modal" id="warn-modal">
+  <div class="warn-sheet">
+    <div class="warn-icon" id="warn-icon"></div>
+    <div class="warn-title" id="warn-title">Are you sure?</div>
+    <div class="warn-body" id="warn-body">This action may affect your account.</div>
+    <div id="warn-input-area"></div>
+    <div class="warn-actions" id="warn-actions"></div>
+  </div>
+</div>
+
+<!-- SLOT MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal-sheet">
+    <div class="drag-handle"></div>
+    <div class="modal-slot-hd">
+      <div class="modal-badge" id="modal-badge">A-07</div>
+      <div>
+        <div class="modal-slot-name" id="modal-name">Space A-07</div>
+        <div class="modal-slot-zone" id="modal-zone">Zone A · Main Campus</div>
+      </div>
+    </div>
+    <div class="time-pair">
+      <div class="time-block">
+        <span class="tb-lbl">Check-in</span>
+        <select class="tb-sel" id="t-in" onchange="syncSummary()">
+          <option>07:00 AM</option><option selected>07:30 AM</option>
+          <option>08:00 AM</option><option>08:30 AM</option>
+          <option>09:00 AM</option><option>10:00 AM</option>
+        </select>
+      </div>
+      <div class="time-block">
+        <span class="tb-lbl">Check-out</span>
+        <select class="tb-sel" id="t-out" onchange="syncSummary()">
+          <option>11:00 AM</option><option>12:00 PM</option>
+          <option>01:00 PM</option><option selected>02:00 PM</option>
+          <option>03:00 PM</option><option>04:00 PM</option>
+        </select>
+      </div>
+    </div>
+    <div class="reserve-info">
+      Reserving space <strong id="s-slot">A-07</strong> in <strong id="s-zone">Zone A</strong><br>
+      From <strong id="s-in">07:30 AM</strong> to <strong id="s-out">02:00 PM</strong><br>
+      Student ID: <strong id="s-mat">A01234567</strong>
+    </div>
+    <button class="btn btn-tec" onclick="confirmRes()" style="margin-bottom:.65rem">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3 6-6" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Confirm Reservation
+    </button>
+    <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<div class="toast-wrap"><div class="toast" id="toast">Reservation confirmed</div></div>
+
+<script>
+// ===== DATA =====
+const ZONES={
+  A:{label:'Zone A',desc:'Main Campus',total:20,avail:8,data:['occ','avail','occ','occ','avail','avail','res','occ','avail','access','occ','avail','occ','avail','avail','occ','occ','avail','occ','avail']},
+  B:{label:'Zone B',desc:'South Entrance',total:24,avail:14,data:['avail','avail','occ','avail','avail','occ','avail','avail','occ','avail','avail','avail','occ','avail','avail','occ','avail','avail','occ','avail','access','avail','occ','avail']},
+  C:{label:'Zone C',desc:'Sports Court',total:16,avail:2,data:['occ','occ','occ','occ','occ','occ','avail','occ','occ','occ','occ','occ','avail','occ','access','occ']},
+  D:{label:'Zone D',desc:'Faculty Only',total:12,avail:5,data:['avail','occ','avail','occ','avail','occ','avail','occ','avail','occ','access','occ']}
+};
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+let activeZone='A',curSlot=null,curUser={name:'',mat:'',initials:'??',email:'',plate:'ABC-123',displayName:''};
+let reservations=[{id:1,slot:'A-07',zone:'A',label:'Zone A',tin:'07:30 AM',tout:'02:00 PM',date:'Today',day:6,month:3,year:2026}];
+let calYear=2026,calMonth=3,selectedDay=6;
+let darkMode=false;
+
+// Notifications data
+let notifications=[
+  {id:1,type:'welcome',title:'Welcome to ParkTec!',desc:'Your account is active. Start by reserving your first parking spot on campus.',time:'Just now',read:false},
+  {id:2,type:'info',title:'Zone C almost full',desc:'Zone C – Sports Court has only 2 spaces left today. Reserve early!',time:'5 min ago',read:false},
+  {id:3,type:'success',title:'Reservation confirmed',desc:'Space A-07 reserved for today, 07:30 AM – 02:00 PM.',time:'Today',read:true},
+  {id:4,type:'warn',title:'Permit expiring soon',desc:'Your campus parking permit expires on June 30, 2026. Contact the office to renew.',time:'Yesterday',read:true}
+];
+
+// ===== DARK MODE =====
+function toggleDark(){
+  darkMode=!darkMode;
+  document.body.classList.toggle('dark',darkMode);
+  const t=document.getElementById('dark-toggle');
+  t.classList.toggle('on',darkMode);
+  t.querySelector('.toggle-knob').style.left=darkMode?'20px':'2px';
+}
+
+// ===== PANELS =====
+function openPanel(id){document.getElementById(id).classList.add('open')}
+function closePanel(id){document.getElementById(id).classList.remove('open')}
+
+function openNotifications(){
+  buildNotifList();
+  openPanel('notif-panel');
+}
+
+function buildNotifList(){
+  const el=document.getElementById('notif-list');
+  const icons={
+    welcome:`<div class="notif-badge" style="background:var(--tec-light)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2l2 5.5h5.5l-4.5 3.3 1.7 5.2L9 12.8l-4.7 3.2 1.7-5.2L1.5 7.5H7L9 2z" fill="var(--tec)" opacity=".8"/></svg></div>`,
+    success:`<div class="notif-badge" style="background:var(--green-bg)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.5 9l4 4 7-7" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`,
+    warn:`<div class="notif-badge" style="background:var(--orange-bg)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3l7 12H2L9 3z" stroke="var(--orange)" stroke-width="1.6" fill="none"/><path d="M9 8v3M9 13v.5" stroke="var(--orange)" stroke-width="1.6" stroke-linecap="round"/></svg></div>`,
+    info:`<div class="notif-badge" style="background:var(--tec-light)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="var(--tec)" stroke-width="1.5"/><path d="M9 8v4M9 6v.5" stroke="var(--tec)" stroke-width="1.6" stroke-linecap="round"/></svg></div>`
+  };
+  el.innerHTML=notifications.length?notifications.map(n=>`
+    <div class="notif-item" onclick="markRead(${n.id})" style="cursor:pointer;opacity:${n.read?.75:1}">
+      ${icons[n.type]||icons.info}
+      <div class="notif-content" style="flex:1">
+        <div class="notif-title">${n.title}</div>
+        <div class="notif-desc">${n.desc}</div>
+        <div class="notif-time">${n.time}</div>
+      </div>
+      ${!n.read?'<div class="notif-unread-dot"></div>':''}
+    </div>`).join(''):'<div style="text-align:center;padding:2rem;color:var(--text3);font-size:.82rem">No notifications</div>';
+  updateNotifDot();
+}
+
+function markRead(id){notifications=notifications.map(n=>n.id===id?{...n,read:true}:n);buildNotifList()}
+function markAllRead(){notifications=notifications.map(n=>({...n,read:true}));buildNotifList()}
+function updateNotifDot(){
+  const hasUnread=notifications.some(n=>!n.read);
+  document.querySelectorAll('.notif-dot').forEach(d=>d.style.display=hasUnread?'block':'none');
+}
+function addNotification(type,title,desc){
+  notifications.unshift({id:Date.now(),type,title,desc,time:'Just now',read:false});
+  updateNotifDot();
+}
+
+// ===== SETTINGS =====
+function openSettings(){
+  document.getElementById('settings-name-preview').textContent=curUser.displayName||curUser.mat;
+  document.getElementById('settings-email-preview').textContent=curUser.email||curUser.mat.toLowerCase()+'@tec.mx';
+  document.getElementById('settings-plate-preview').textContent=curUser.plate||'Not set';
+  buildSettingsHistory();
+  openPanel('settings-panel');
+}
+
+function buildSettingsHistory(){
+  const el=document.getElementById('settings-history');
+  if(!reservations.length){el.innerHTML='<div style="font-size:.78rem;color:var(--text3);padding:.5rem 0">No reservations yet</div>';return;}
+  el.innerHTML=reservations.map(r=>`<div class="hist-item"><div class="hi-spot">${r.slot} · ${r.label}</div><div class="hi-meta">${r.date} · ${r.tin} – ${r.tout}</div></div>`).join('');
+}
+
+// ===== WARNING MODALS =====
+const warnConfigs={
+  name:{
+    icon:'<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="9" r="4" stroke="var(--tec)" stroke-width="2"/><path d="M4 23c0-4.97 4.03-9 9-9s9 4.03 9 9" stroke="var(--tec)" stroke-width="2" stroke-linecap="round"/></svg>',
+    iconBg:'var(--tec-light)',title:'Change Display Name',
+    body:'This will update your name across the ParkTec app. Your Student ID will not change.',
+    input:{id:'wi-name',placeholder:'New display name',type:'text'},
+    confirm:'Update Name',confirmStyle:'btec'
+  },
+  photo:{
+    icon:'<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="2" y="5" width="22" height="16" rx="4" stroke="var(--tec)" stroke-width="2"/><circle cx="13" cy="13" r="4" stroke="var(--tec)" stroke-width="2"/><circle cx="20" cy="8" r="1.5" fill="var(--tec)"/></svg>',
+    iconBg:'var(--tec-light)',title:'Change Profile Photo',
+    body:'Upload a new profile photo. Make sure it clearly shows your face as it may be used for identity verification at campus gates.',
+    input:null,confirm:'Choose Photo',confirmStyle:'btec'
+  },
+  password:{
+    icon:'<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="5" y="12" width="16" height="11" rx="3" stroke="var(--orange)" stroke-width="2"/><path d="M9 12V9a4 4 0 018 0v3" stroke="var(--orange)" stroke-width="2"/><circle cx="13" cy="17.5" r="1.5" fill="var(--orange)"/></svg>',
+    iconBg:'var(--orange-bg)',title:'Change Password',
+    body:'You will be logged out of all devices after changing your password. Make sure you remember your new password.',
+    input:{id:'wi-pw',placeholder:'New password (min 8 chars)',type:'password'},
+    confirm:'Change Password',confirmStyle:'btec'
+  },
+  email:{
+    icon:'<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="2" y="6" width="22" height="14" rx="3" stroke="var(--tec)" stroke-width="2"/><path d="M2 10l11 6 11-6" stroke="var(--tec)" stroke-width="2"/></svg>',
+    iconBg:'var(--tec-light)',title:'Change Email Address',
+    body:'Changing your email will require re-verification. You will receive a confirmation link at your new address.',
+    input:{id:'wi-email',placeholder:'New email address',type:'email'},
+    confirm:'Update Email',confirmStyle:'btec'
+  },
+  plate:{
+    icon:'<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="2" y="7" width="22" height="12" rx="4" fill="none" stroke="var(--text2)" stroke-width="2"/><path d="M6 7L8.5 4H17.5L20 7" stroke="var(--text2)" stroke-width="1.8"/><circle cx="7" cy="19" r="2.5" fill="var(--text2)"/><circle cx="19" cy="19" r="2.5" fill="var(--text2)"/></svg>',
+    iconBg:'var(--surface2)',title:'Update Vehicle Plate',
+    body:'Make sure this matches your actual vehicle plate. This is used for campus gate verification.',
+    input:{id:'wi-plate',placeholder:'e.g. ABC-123',type:'text'},
+    confirm:'Update Plate',confirmStyle:'btec'
+  },
+  delete:{
+    icon:'<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M5 8h16M10 8V6h6v2M8.5 8l1 12h7l1-12" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    iconBg:'var(--red-bg)',title:'Delete Account',
+    body:'This action is permanent and cannot be undone. All your reservations, permit data, and history will be erased immediately.',
+    input:null,confirm:'Delete Permanently',confirmStyle:'danger'
+  }
+};
+
+function openWarn(type){
+  const cfg=warnConfigs[type];
+  if(!cfg)return;
+  const modal=document.getElementById('warn-modal');
+  document.getElementById('warn-icon').innerHTML=`<div style="width:52px;height:52px;border-radius:50%;background:${cfg.iconBg};display:flex;align-items:center;justify-content:center;border:2px solid ${cfg.iconBg}">${cfg.icon}</div>`;
+  document.getElementById('warn-title').textContent=cfg.title;
+  document.getElementById('warn-body').textContent=cfg.body;
+  document.getElementById('warn-input-area').innerHTML=cfg.input
+    ?`<input class="warn-input" id="${cfg.input.id}" type="${cfg.input.type}" placeholder="${cfg.input.placeholder}"/>`:'';
+  const confirmCls=cfg.confirmStyle==='danger'?'btn-danger':'btn-tec';
+  document.getElementById('warn-actions').innerHTML=`
+    <button class="btn btn-outline" onclick="closeWarn()" style="font-size:.82rem">Cancel</button>
+    <button class="btn ${confirmCls}" onclick="applyWarn('${type}')" style="font-size:.82rem">${cfg.confirm}</button>`;
+  modal.classList.add('open');
+}
+
+function closeWarn(){document.getElementById('warn-modal').classList.remove('open')}
+
+function applyWarn(type){
+  if(type==='name'){
+    const v=document.getElementById('wi-name')?.value.trim();
+    if(v){curUser.displayName=v;document.getElementById('settings-name-preview').textContent=v;showToast('Display name updated');}
+  } else if(type==='plate'){
+    const v=document.getElementById('wi-plate')?.value.trim();
+    if(v){curUser.plate=v;document.getElementById('settings-plate-preview').textContent=v;showToast('Vehicle plate updated');}
+  } else if(type==='password'){
+    showToast('Password changed successfully');
+  } else if(type==='email'){
+    const v=document.getElementById('wi-email')?.value.trim();
+    if(v){document.getElementById('settings-email-preview').textContent=v;showToast('Verification email sent');}
+  } else if(type==='photo'){
+    showToast('Profile photo updated');
+  } else if(type==='delete'){
+    closeWarn();closePanel('settings-panel');signOut();
+    showToast('Account deleted');return;
+  }
+  closeWarn();
+}
+
+// ===== AUTH CHOICE =====
+function showAuthSheet(tab){
+  document.getElementById('auth-sheet-overlay').style.display='flex';
+  switchAuthTab(tab);
+}
+function hideAuthSheet(e){
+  if(e.target===document.getElementById('auth-sheet-overlay'))
+    document.getElementById('auth-sheet-overlay').style.display='none';
+}
+function switchAuthTab(tab){
+  document.getElementById('tab-signup').classList.toggle('active',tab==='signup');
+  document.getElementById('tab-login').classList.toggle('active',tab==='login');
+  document.getElementById('signup-form').classList.toggle('active',tab==='signup');
+  document.getElementById('login-form-inner').classList.toggle('active',tab==='login');
+}
+
+function doSignUp(){
+  const uid=document.getElementById('su-uid').value.trim();
+  const pw=document.getElementById('su-pw').value;
+  const pw2=document.getElementById('su-pw2').value;
+  const name=document.getElementById('su-name').value.trim();
+  const email=document.getElementById('su-email').value.trim();
+  const plate=document.getElementById('su-plate').value.trim();
+  document.getElementById('su-uid-err').style.display='none';
+  document.getElementById('su-pw-err').style.display='none';
+  if(!/^[Aa]0[12]\d{6}$/.test(uid)){document.getElementById('su-uid-err').style.display='block';return;}
+  if(pw!==pw2){document.getElementById('su-pw-err').style.display='block';return;}
+  const mat=uid.toUpperCase();
+  curUser={name:name||mat,mat,initials:mat.slice(0,2),email:email||mat.toLowerCase()+'@tec.mx',plate:plate||'ABC-123',displayName:name||mat};
+  document.getElementById('auth-sheet-overlay').style.display='none';
+  enterApp();
+}
+
+function doLogin(){
+  const u=document.getElementById('uid').value.trim();
+  if(!/^[Aa]0[12]\d{6}$/.test(u)){document.getElementById('uid-err').style.display='block';return;}
+  document.getElementById('uid-err').style.display='none';
+  const mat=u.toUpperCase();
+  curUser={name:mat,mat,initials:mat.slice(0,2),email:mat.toLowerCase()+'@tec.mx',plate:'ABC-123',displayName:mat};
+  document.getElementById('auth-sheet-overlay').style.display='none';
+  enterApp();
+}
+
+function enterApp(){
+  ['hdr-avatar','prof-avatar'].forEach(id=>document.getElementById(id).textContent=curUser.initials);
+  document.getElementById('prof-name').textContent=curUser.displayName||curUser.mat;
+  document.getElementById('prof-mat').textContent=curUser.mat;
+  document.getElementById('home-name').textContent=curUser.displayName||curUser.mat;
+  document.getElementById('s-mat').textContent=curUser.mat;
+  document.getElementById('auth-choice').classList.remove('active');
+  document.getElementById('app').classList.add('active');
+  buildHomeZones();buildZoneTabs();buildSlots('A');buildCalendar();buildAllRes();buildHomeNext();
+  // Add welcome notification
+  addNotification('welcome','Welcome, '+(curUser.displayName||curUser.mat)+'!','Your ParkTec account is ready. Reserve your first parking spot on campus.');
+  setTimeout(showOnboarding,350);
+}
+
+function signOut(){
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('auth-choice').classList.add('active');
+  document.getElementById('uid').value='';
+  document.getElementById('upw').value='';
+  switchPane('home',document.querySelectorAll('.nav-btn')[0]);
+}
+
+// ===== ONBOARDING =====
+let obStep=0;
+const obSlides=['ob-0','ob-1','ob-2'];
+const obDots=['d0','d1','d2'];
+const obBtnLabels=['Next →','Next →',"Let's Park!"];
+function showOnboarding(){obStep=0;document.getElementById('onboarding').classList.add('show');updateObUI();}
+function updateObUI(){
+  obSlides.forEach((id,i)=>document.getElementById(id).classList.toggle('active',i===obStep));
+  obDots.forEach((id,i)=>document.getElementById(id).classList.toggle('active',i===obStep));
+  document.getElementById('ob-next-btn').textContent=obBtnLabels[obStep];
+}
+function obNext(){if(obStep<2){obStep++;updateObUI();}else obSkip();}
+function obSkip(){document.getElementById('onboarding').classList.remove('show');}
+
+// ===== HOME =====
+function buildHomeZones(){
+  document.getElementById('home-zones').innerHTML=Object.entries(ZONES).map(([k,v])=>{
+    const pct=Math.round(v.avail/v.total*100);
+    const cls=pct>30?'bar-green':pct>10?'bar-orange':'bar-red';
+    const pill=pct>30?'pill-green':pct>10?'pill-orange':'pill-red';
+    return`<div class="zone-tile" onclick="goMap('${k}')">
+      <div class="zt-header"><span class="zt-name">${v.label}</span><span class="pill ${pill}" style="font-size:.62rem">${v.avail}</span></div>
+      <div class="zt-avail">${v.avail} of ${v.total} available</div>
+      <div class="bar-track"><div class="bar-fill ${cls}" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+}
+function buildHomeNext(){
+  const el=document.getElementById('home-next');
+  if(!reservations.length){el.innerHTML=`<div class="card" style="text-align:center;padding:1.5rem;color:var(--text3)"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="margin-bottom:.5rem"><rect x="4" y="7" width="24" height="21" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M10 4v6M22 4v6M4 16h24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><div style="margin-top:.4rem;font-size:.82rem">No upcoming reservations</div><button class="btn btn-tec" onclick="switchPane('map',document.querySelectorAll('.nav-btn')[1])" style="margin-top:.9rem;padding:.6rem">Reserve a Spot</button></div>`;return;}
+  const r=reservations[0];
+  el.innerHTML=`<div class="card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem"><span style="font-weight:800;font-size:1.05rem;letter-spacing:-.4px">${r.slot}</span><span class="pill pill-blue">${r.date}</span></div><div style="font-size:.75rem;color:var(--text2);margin-bottom:.4rem">${r.label} · ${ZONES[r.zone].desc}</div><div style="font-size:.8rem;margin-bottom:.85rem;display:flex;align-items:center;gap:.35rem"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 3.5v3l2 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>${r.tin} – ${r.tout}</div><button class="btn-sm btn-danger" onclick="cancelRes(${r.id})"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2L2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Cancel Reservation</button></div>`;
+}
+
+// ===== MAP =====
+function buildZoneTabs(){
+  document.getElementById('zone-tabs').innerHTML=Object.entries(ZONES).map(([k,v])=>`<button class="ztab${k===activeZone?' active':''}" onclick="selectZone('${k}',this)">${v.label}</button>`).join('');
+}
+function selectZone(z,btn){activeZone=z;document.querySelectorAll('.ztab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');buildSlots(z);}
+function buildSlots(z){
+  const zd=ZONES[z];
+  document.getElementById('zh-name').textContent=zd.label+' – '+zd.desc;
+  document.getElementById('zh-sub').textContent=zd.avail+' spaces available';
+  const pill=document.getElementById('zh-pill');
+  pill.textContent=zd.avail+' free';
+  pill.className='pill '+(zd.avail>5?'pill-green':zd.avail>2?'pill-orange':'pill-red');
+  const icons={
+    avail:`<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="6" fill="#22c55e" opacity=".8"/><path d="M4 6.5l2 2 3-3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    occ:`<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="6" fill="#ef4444" opacity=".75"/><path d="M4.5 4.5l4 4M8.5 4.5l-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+    res:`<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="6" fill="#0039a6" opacity=".8"/><path d="M6.5 3.5l.9 2.5H10l-2.1 1.5.8 2.5-2.2-1.6-2.1 1.6.8-2.5L3 6h2.6L6.5 3.5z" fill="white"/></svg>`,
+    access:`<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="6" fill="#7c3aed" opacity=".7"/><circle cx="6.5" cy="4" r="1" fill="white"/><path d="M4.5 7h4M6.5 6v4" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg>`
+  };
+  document.getElementById('slots-grid').innerHTML=zd.data.map((s,i)=>{
+    const id=z+'-'+String(i+1).padStart(2,'0');
+    return`<div class="slot ${s}" onclick="${s==='avail'?`openModal('${id}','${z}')`:''}" title="${s==='avail'?'Tap to reserve':s==='occ'?'Occupied':s==='res'?'Your reservation':'Accessible'}">${icons[s]||icons.avail}<span class="s-id">${id}</span></div>`;
+  }).join('');
+}
+function openModal(slot,zone){
+  curSlot={slot,zone};
+  document.getElementById('modal-badge').textContent=slot;
+  document.getElementById('modal-name').textContent='Space '+slot;
+  document.getElementById('modal-zone').textContent=ZONES[zone].label+' · '+ZONES[zone].desc;
+  document.getElementById('s-slot').textContent=slot;
+  document.getElementById('s-zone').textContent=ZONES[zone].label;
+  syncSummary();
+  document.getElementById('modal').classList.add('open');
+}
+function syncSummary(){
+  document.getElementById('s-in').textContent=document.getElementById('t-in').value;
+  document.getElementById('s-out').textContent=document.getElementById('t-out').value;
+}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function confirmRes(){
+  if(!curSlot)return;
+  const tin=document.getElementById('t-in').value,tout=document.getElementById('t-out').value;
+  const idx=parseInt(curSlot.slot.split('-')[1])-1;
+  ZONES[curSlot.zone].data[idx]='res';
+  ZONES[curSlot.zone].avail=Math.max(0,ZONES[curSlot.zone].avail-1);
+  reservations.unshift({id:Date.now(),slot:curSlot.slot,zone:curSlot.zone,label:ZONES[curSlot.zone].label,tin,tout,date:'Today',day:selectedDay,month:calMonth,year:calYear});
+  closeModal();
+  buildSlots(curSlot.zone);buildHomeZones();buildHomeNext();buildCalendar();buildAllRes();
+  document.getElementById('stat-res').textContent=reservations.length;
+  document.getElementById('cf-slot').textContent=curSlot.slot;
+  document.getElementById('cf-zone').textContent=ZONES[curSlot.zone].label+' · '+ZONES[curSlot.zone].desc;
+  document.getElementById('cf-in').textContent=tin;
+  document.getElementById('cf-out').textContent=tout;
+  document.getElementById('cf-mat').textContent=curUser.mat;
+  document.getElementById('confirm-overlay').classList.add('show');
+  addNotification('success','Reservation Confirmed','Space '+curSlot.slot+' reserved for '+tin+' – '+tout+'.');
+}
+function closeConfirm(){document.getElementById('confirm-overlay').classList.remove('show');switchPane('home',document.querySelectorAll('.nav-btn')[0]);}
+function cancelRes(id){
+  const r=reservations.find(x=>x.id===id);
+  if(r){const idx=parseInt(r.slot.split('-')[1])-1;if(ZONES[r.zone]){ZONES[r.zone].data[idx]='avail';ZONES[r.zone].avail++;}}
+  reservations=reservations.filter(x=>x.id!==id);
+  buildHomeZones();buildHomeNext();buildSlots(activeZone);buildCalendar();buildAllRes();
+  document.getElementById('stat-res').textContent=reservations.length;
+  showToast('Reservation cancelled');
+}
+
+// ===== CALENDAR =====
+function buildCalendar(){
+  document.getElementById('cal-month-title').textContent=MONTHS[calMonth]+' '+calYear;
+  document.getElementById('cal-days-hd').innerHTML=DAYS.map(d=>`<div class="cal-day-label">${d}</div>`).join('');
+  const firstDay=new Date(calYear,calMonth,1).getDay(),daysInMonth=new Date(calYear,calMonth+1,0).getDate(),today=new Date();
+  const todayD=today.getDate(),todayM=today.getMonth(),todayY=today.getFullYear();
+  const resDays=new Set(reservations.filter(r=>r.month===calMonth&&r.year===calYear).map(r=>r.day));
+  let cells='';
+  for(let i=0;i<firstDay;i++)cells+=`<div class="cal-cell empty"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const isToday=d===todayD&&calMonth===todayM&&calYear===todayY;
+    const isSel=d===selectedDay;const hasRes=resDays.has(d);
+    const isPast=new Date(calYear,calMonth,d)<new Date(todayY,todayM,todayD);
+    let cls='cal-cell';if(isSel)cls+=' selected';else if(isToday)cls+=' today';
+    if(hasRes)cls+=' has-res';if(isPast&&!isToday)cls+=' past';
+    cells+=`<div class="${cls}" onclick="selectCalDay(${d})">${d}</div>`;
+  }
+  document.getElementById('cal-grid').innerHTML=cells;buildResForDay(selectedDay);
+}
+function selectCalDay(d){selectedDay=d;buildCalendar();}
+function buildResForDay(d){
+  const dayRes=reservations.filter(r=>r.day===d&&r.month===calMonth&&r.year===calYear);
+  const label=`${MONTHS[calMonth]} ${d}, ${calYear}`;
+  const el=document.getElementById('cal-res-section');
+  if(!dayRes.length){el.innerHTML=`<div class="rfd-label" style="margin-bottom:.8rem">${label} — no reservations</div>`;return;}
+  el.innerHTML=`<div class="rfd-label">Reservations on ${label}</div>`+dayRes.map(r=>`<div class="res-item"><div class="ri-badge">${r.slot}</div><div class="ri-info"><div class="ri-spot">${r.slot}</div><div class="ri-meta">${r.label}</div></div><div class="ri-right"><div class="ri-time">${r.tin} – ${r.tout}</div><button class="btn-sm btn-danger" onclick="cancelRes(${r.id})" style="font-size:.68rem;padding:.28rem .6rem">Cancel</button></div></div>`).join('');
+}
+function buildAllRes(){
+  const el=document.getElementById('all-res-list');
+  if(!reservations.length){el.innerHTML='<div style="text-align:center;padding:1.5rem;color:var(--text3);font-size:.82rem">No reservations yet</div>';return;}
+  el.innerHTML=reservations.map(r=>`<div class="res-item" style="margin-bottom:.5rem"><div class="ri-badge">${r.slot}</div><div class="ri-info"><div class="ri-spot">${r.slot}</div><div class="ri-meta">${r.label} · ${r.date}</div></div><div class="ri-right"><div class="ri-time">${r.tin} – ${r.tout}</div><button class="btn-sm btn-danger" onclick="cancelRes(${r.id})" style="font-size:.68rem;padding:.28rem .6rem">Cancel</button></div></div>`).join('');
+}
+function changeMonth(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}buildCalendar();}
+
+// ===== NAV =====
+function goMap(z){activeZone=z;switchPane('map',document.querySelectorAll('.nav-btn')[1]);document.querySelectorAll('.ztab').forEach((b,i)=>{b.classList.toggle('active',['A','B','C','D'][i]===z)});buildSlots(z);}
+function switchPane(name,el){
+  document.querySelectorAll('.tab-pane').forEach(p=>{p.classList.remove('active');p.style.display='none';});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const pane=document.getElementById('pane-'+name);pane.classList.add('active');pane.style.display='block';el.classList.add('active');
+}
+
+// ===== TOAST =====
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.innerHTML=`<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>${msg}`;
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ===== EVENTS =====
+document.getElementById('upw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+document.getElementById('uid').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('upw').focus()});
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal()});
+document.getElementById('warn-modal').addEventListener('click',e=>{if(e.target===document.getElementById('warn-modal'))closeWarn()});
+</script>
+</body>
+</html>
